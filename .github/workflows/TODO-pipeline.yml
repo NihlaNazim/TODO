@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python 3.13
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10 # fixed from 3.13 which is invalid
+          python-version: 3.13 # fixed from 3.13 which is invalid
 
       - name: Install dependencies
         run: |
