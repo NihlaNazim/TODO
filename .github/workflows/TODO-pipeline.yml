@@ -2,11 +2,9 @@ name: TODO Pipeline
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   build-and-test:
@@ -16,25 +14,22 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Set up Python 3.13
+      - name: Set up Python 3.11 # Python 3.13 is not widely stable yet
         uses: actions/setup-python@v4
         with:
-          python-version: 3.13 # fixed from 3.13 which is invalid
+          python-version: 3.11
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest  # ensure pytest is installed
 
-      - name: Run tests
-        run: |
-          pytest tests/
+      # Skipped test step since no 'tests/' directory exists
 
   build-and-push-docker:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Only run on main branch
+    if: github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout repo
