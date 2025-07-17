@@ -1,6 +1,7 @@
 Flask==2.3.2
 Flask_SQLAlchemy==3.0.5
 psycopg2-binary==2.9.6
+pytest
 
 #these are our python depo
 #Docker will use this to install needed libraries in the container

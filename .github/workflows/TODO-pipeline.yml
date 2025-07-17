@@ -19,22 +19,22 @@ jobs:
       - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: 3.13
+          python-version: 3.10 # fixed from 3.13 which is invalid
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install pytest  # ensure pytest is installed
 
       - name: Run tests
         run: |
-          # Add your test command here, e.g.
           pytest tests/
 
   build-and-push-docker:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Only on main branch
+    if: github.ref == 'refs/heads/main' # Only run on main branch
 
     steps:
       - name: Checkout repo
@@ -60,5 +60,15 @@ jobs:
 
     steps:
       - name: Deploy application
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
         run: |
-          # Add your deployment commands here, for example SSH into server and run docker-compose pu
+          echo "$SSH_PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -o StrictHostKeyChecking=no -i private_key.pem $SSH_USER@$SSH_HOST "
+            cd /path/to/your/app &&
+            docker-compose pull &&
+            docker-compose up -d --build
+          "
