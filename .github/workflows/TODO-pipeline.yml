@@ -24,8 +24,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # Skipped test step since no 'tests/' directory exists
-
   build-and-push-docker:
     needs: build-and-test
     runs-on: ubuntu-latest
